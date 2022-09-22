@@ -21,6 +21,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'exam_prep_expenses_tracker.web',
 ]
 
 MIDDLEWARE = [
@@ -61,8 +63,8 @@ WSGI_APPLICATION = 'exam_prep_expenses_tracker.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'expenses_tracker',
-        'USER': 'erinbedri',
+        'NAME': 'postgres',
+        'USER': 'postgres',
         'PASSWORD': '930502erin',
         'HOST': '127.0.0.1',
         'PORT': '5432',
