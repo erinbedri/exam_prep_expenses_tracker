@@ -1,8 +1,20 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+
+from exam_prep_expenses_tracker.web.models import Profile
+
+
+def get_profile():
+    profile = Profile.objects.all()
+    return profile
 
 
 def show_home(request):
-    return render(request, 'home-with-profile.html')
+    profile = get_profile()
+
+    if profile:
+        return render(request, 'home-with-profile.html')
+    else:
+        return redirect('create profile')
 
 
 def create_expense(request):
@@ -31,4 +43,3 @@ def edit_profile(request):
 
 def delete_profile(request):
     return render(request, 'profile-delete.html')
-
