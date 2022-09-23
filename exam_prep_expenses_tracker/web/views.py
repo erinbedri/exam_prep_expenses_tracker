@@ -15,7 +15,8 @@ def show_home(request):
         profile = profile[0]
         budget = profile.budget
         expenses = Expense.objects.all()
-        budget_left = budget - sum(e for e in expenses)
+        budget_left = budget - sum(e.price for e in expenses)
+
         context = {
             'budget': budget,
             'expenses': expenses,
@@ -30,11 +31,11 @@ def create_expense(request):
     return render(request, 'expense-create.html')
 
 
-def edit_expense(request):
+def edit_expense(request, pk):
     return render(request, 'expense-edit.html')
 
 
-def delete_expense(request):
+def delete_expense(request, pk):
     return render(request, 'expense-delete.html')
 
 
