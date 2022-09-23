@@ -46,3 +46,9 @@ class EditProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ('budget', 'first_name', 'last_name', 'image')
+
+
+class DeleteProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ()

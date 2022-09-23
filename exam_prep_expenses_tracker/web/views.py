@@ -2,12 +2,13 @@ from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 
 from exam_prep_expenses_tracker.web.forms import CreateExpenseForm, CreateProfileForm, EditExpenseForm, \
-    DeleteExpenseForm, EditProfileForm
+    DeleteExpenseForm, EditProfileForm, DeleteProfileForm
 from exam_prep_expenses_tracker.web.models import Profile, Expense
 
 
 def get_profile():
     profile = Profile.objects.all()
+
     return profile
 
 
@@ -163,4 +164,27 @@ def edit_profile(request):
 
 
 def delete_profile(request):
-    return render(request, 'profile-delete.html')
+    context = {}
+    profile = get_profile()
+    expenses = Expense.objects.all()
+
+    if profile:
+        profile = profile[0]
+        context['profile'] = profile
+
+    if request.method == 'POST':
+
+        form = DeleteProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            profile.delete()
+            expenses.delete()
+            messages.success(request, 'Your profile was successfully deleted!')
+        else:
+            messages.error(request, 'Error deleting data!')
+        return redirect('home')
+
+    form = DeleteProfileForm(instance=profile)
+
+    context['form'] = form
+
+    return render(request, 'profile-delete.html', context)
