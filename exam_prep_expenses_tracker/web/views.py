@@ -1,3 +1,5 @@
+import os
+
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -142,6 +144,8 @@ def delete_profile(request):
     if request.method == 'POST' and profile:
         form = DeleteProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
+            image_path = profile.image.path
+            os.remove(image_path)
             profile.delete()
             expenses.delete()
             return redirect('home')
