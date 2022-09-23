@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 
-from exam_prep_expenses_tracker.web.models import Profile
+from exam_prep_expenses_tracker.web.models import Profile, Expense
 
 
 def get_profile():
@@ -12,7 +12,16 @@ def show_home(request):
     profile = get_profile()
 
     if profile:
-        return render(request, 'home-with-profile.html')
+        profile = profile[0]
+        budget = profile.budget
+        expenses = Expense.objects.all()
+        budget_left = budget - sum(e for e in expenses)
+        context = {
+            'budget': budget,
+            'expenses': expenses,
+            'budget_left': budget_left,
+        }
+        return render(request, 'home-with-profile.html', context)
     else:
         return redirect('create profile')
 

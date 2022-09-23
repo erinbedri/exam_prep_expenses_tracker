@@ -6,14 +6,14 @@
     <div>
         <h1>Summary</h1>
         <ul class="expenses-list">
-            <!-- User Budget -->
-            <li class="blue">1600.00$</li>
-            <!-- First Expense -->
-            <li class="red"> - 900.00$</li>
-            <!-- Second Expense -->
-            <li class="red"> - 200.00$</li>
-            <!-- Money Left -->
-            <li class="green">= 500.00$ left</li>
+
+            <li class="blue">{{ budget|floatformat:2 }}$</li>
+
+            {% for expense in expenses %}
+                <li class="red"> - {{ expense|floatformat:2 }}$</li>
+            {% endfor %}
+
+            <li class="green">= {{ budget_left|floatformat:2 }}$ left</li>
         </ul>
     </div>
     <!-- End Summary -->
