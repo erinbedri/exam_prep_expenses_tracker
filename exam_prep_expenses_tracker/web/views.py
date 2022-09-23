@@ -136,26 +136,20 @@ def edit_profile(request):
 
 
 def delete_profile(request):
-    context = {}
     profile = get_profile()
     expenses = Expense.objects.all()
 
-    if profile:
-        context['profile'] = profile
-
-    if request.method == 'POST':
-
+    if request.method == 'POST' and profile:
         form = DeleteProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             profile.delete()
             expenses.delete()
-            messages.success(request, 'Your profile was successfully deleted!')
-        else:
-            messages.error(request, 'Error deleting data!')
-        return redirect('home')
+            return redirect('home')
+    else:
+        form = DeleteProfileForm(instance=profile)
 
-    form = DeleteProfileForm(instance=profile)
-
-    context['form'] = form
+    context = {
+        'form': form,
+    }
 
     return render(request, 'profile-delete.html', context)
