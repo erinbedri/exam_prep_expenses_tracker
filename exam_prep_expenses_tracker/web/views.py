@@ -7,8 +7,7 @@ from exam_prep_expenses_tracker.web.models import Profile, Expense
 
 
 def get_profile():
-    profile = Profile.objects.all()
-
+    profile = Profile.objects.all().first()
     return profile
 
 
@@ -16,7 +15,6 @@ def show_home(request):
     profile = get_profile()
 
     if profile:
-        profile = profile[0]
         budget = profile.budget
         expenses = Expense.objects.all()
         budget_left = budget - sum(e.price for e in expenses)
@@ -88,8 +86,6 @@ def show_profile(request):
     profile = get_profile()
 
     if profile:
-        profile = profile[0]
-
         budget = profile.budget
         expenses = Expense.objects.all()
         items_count = len(expenses)
@@ -108,46 +104,34 @@ def show_profile(request):
 
 
 def create_profile(request):
-    context = {}
-
     if request.method == 'POST':
         form = CreateProfileForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Your profile was successfully created!')
-        else:
-            messages.error(request, 'Error saving data!')
-        return redirect('home')
+            return redirect('home')
+    else:
+        form = CreateProfileForm()
 
-    form = CreateProfileForm()
-
-    context['form'] = form
-
+    context = {
+        'form': form,
+    }
     return render(request, 'home-no-profile.html', context)
 
 
 def edit_profile(request):
-    context = {}
     profile = get_profile()
 
-    if profile:
-        profile = profile[0]
-        context['profile'] = profile
-
-    if request.method == 'POST':
-
+    if request.method == 'POST' and profile:
         form = EditProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Your profile was successfully edited!')
-        else:
-            messages.error(request, 'Error saving data!')
-        return redirect('show profile')
+            return redirect('show profile')
+    else:
+        form = EditProfileForm(instance=profile)
 
-    form = EditProfileForm(instance=profile)
-
-    context['form'] = form
-
+    context = {
+        'form': form
+    }
     return render(request, 'profile-edit.html', context)
 
 
@@ -157,7 +141,6 @@ def delete_profile(request):
     expenses = Expense.objects.all()
 
     if profile:
-        profile = profile[0]
         context['profile'] = profile
 
     if request.method == 'POST':
