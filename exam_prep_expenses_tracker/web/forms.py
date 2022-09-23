@@ -40,3 +40,9 @@ class DeleteExpenseForm(forms.ModelForm):
     description = forms.CharField(
         disabled=True,
     )
+
+
+class EditProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('budget', 'first_name', 'last_name', 'image')
