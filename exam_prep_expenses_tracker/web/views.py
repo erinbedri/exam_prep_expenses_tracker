@@ -32,20 +32,17 @@ def show_home(request):
 
 
 def create_expense(request):
-    context = {}
-
     if request.method == 'POST':
-        form = CreateExpenseForm(request.POST, request.FILES)
+        form = CreateExpenseForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Your expense was successfully added!')
-        else:
-            messages.error(request, 'Error saving data!')
-        return redirect('home')
+            return redirect('home')
+    else:
+        form = CreateExpenseForm()
 
-    form = CreateExpenseForm()
-
-    context['form'] = form
+    context = {
+        'form': form
+    }
 
     return render(request, 'expense-create.html', context)
 
