@@ -69,23 +69,18 @@ def edit_expense(request, pk):
 def delete_expense(request, pk):
     expense = Expense.objects.get(pk=pk)
 
-    context = {
-        'expense': expense
-    }
-
     if request.method == 'POST':
         form = DeleteExpenseForm(request.POST, request.FILES, instance=expense)
-
         if form.is_valid():
             expense.delete()
-            messages.success(request, 'Your expense was successfully deleted!')
-        else:
-            messages.error(request, 'Error deleting data!')
-        return redirect('home')
+            return redirect('home')
+    else:
+        form = DeleteExpenseForm(instance=expense)
 
-    form = DeleteExpenseForm(instance=expense)
-
-    context['form'] = form
+    context = {
+        'expense': expense,
+        'form': form,
+    }
     return render(request, 'expense-delete.html', context)
 
 
