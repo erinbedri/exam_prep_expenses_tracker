@@ -46,6 +46,9 @@ class Profile(models.Model):
         )
     )
 
+    def __str__(self):
+        return f'{self.first_name} {self.last_name}'
+
 
 class Expense(models.Model):
     EXPENSE_TITLE_MAX_LEN = 30
@@ -62,3 +65,6 @@ class Expense(models.Model):
         null=True,
         blank=True,
     )
+
+    def __str__(self):
+        return f'{self.title} - {self.price}'

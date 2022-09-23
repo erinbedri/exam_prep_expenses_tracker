@@ -1,5 +1,7 @@
+from django.contrib import messages
 from django.shortcuts import render, redirect
 
+from exam_prep_expenses_tracker.web.forms import CreateExpenseForm, CreateProfileForm
 from exam_prep_expenses_tracker.web.models import Profile, Expense
 
 
@@ -28,7 +30,22 @@ def show_home(request):
 
 
 def create_expense(request):
-    return render(request, 'expense-create.html')
+    context = {}
+
+    if request.method == 'POST':
+        form = CreateExpenseForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your expense was successfully added!')
+        else:
+            messages.error(request, 'Error saving data!')
+        return redirect('home')
+
+    form = CreateExpenseForm()
+
+    context['form'] = form
+
+    return render(request, 'expense-create.html', context)
 
 
 def edit_expense(request, pk):
@@ -44,7 +61,22 @@ def show_profile(request):
 
 
 def create_profile(request):
-    return render(request, 'home-no-profile.html')
+    context = {}
+
+    if request.method == 'POST':
+        form = CreateProfileForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your profile was successfully created!')
+        else:
+            messages.error(request, 'Error saving data!')
+        return redirect('home')
+
+    form = CreateProfileForm()
+
+    context['form'] = form
+
+    return render(request, 'home-no-profile.html', context)
 
 
 def edit_profile(request):
