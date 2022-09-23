@@ -50,22 +50,18 @@ def create_expense(request):
 def edit_expense(request, pk):
     expense = Expense.objects.get(pk=pk)
 
-    context = {
-        'expense': expense
-    }
-
     if request.method == 'POST':
         form = EditExpenseForm(request.POST, request.FILES, instance=expense)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Your expense was successfully edited!')
-        else:
-            messages.error(request, 'Error saving data!')
-        return redirect('home')
+            return redirect('home')
+    else:
+        form = EditExpenseForm(instance=expense)
 
-    form = EditExpenseForm(instance=expense)
-
-    context['form'] = form
+    context = {
+        'expense': expense,
+        'form': form
+    }
 
     return render(request, 'expense-edit.html', context)
 
