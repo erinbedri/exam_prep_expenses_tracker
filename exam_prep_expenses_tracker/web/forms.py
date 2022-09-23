@@ -13,3 +13,30 @@ class CreateExpenseForm(forms.ModelForm):
     class Meta:
         model = Expense
         fields = ('title', 'description', 'image', 'price')
+
+
+class EditExpenseForm(forms.ModelForm):
+    class Meta:
+        model = Expense
+        fields = ('title', 'description', 'image', 'price')
+
+
+class DeleteExpenseForm(forms.ModelForm):
+    class Meta:
+        model = Expense
+        fields = ('title', 'description', 'image', 'price')
+
+    title = forms.CharField(
+        disabled=True,
+    )
+    image = forms.URLField(
+        disabled=True,
+    )
+
+    price = forms.FloatField(
+        disabled=True,
+    )
+
+    description = forms.CharField(
+        disabled=True,
+    )

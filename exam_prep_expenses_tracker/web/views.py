@@ -1,7 +1,8 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
 
-from exam_prep_expenses_tracker.web.forms import CreateExpenseForm, CreateProfileForm
+from exam_prep_expenses_tracker.web.forms import CreateExpenseForm, CreateProfileForm, EditExpenseForm, \
+    DeleteExpenseForm
 from exam_prep_expenses_tracker.web.models import Profile, Expense
 
 
@@ -49,15 +50,72 @@ def create_expense(request):
 
 
 def edit_expense(request, pk):
-    return render(request, 'expense-edit.html')
+    expense = Expense.objects.get(pk=pk)
+
+    context = {
+        'expense': expense
+    }
+
+    if request.method == 'POST':
+        form = EditExpenseForm(request.POST, request.FILES, instance=expense)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your expense was successfully edited!')
+        else:
+            messages.error(request, 'Error saving data!')
+        return redirect('home')
+
+    form = EditExpenseForm(instance=expense)
+
+    context['form'] = form
+
+    return render(request, 'expense-edit.html', context)
 
 
 def delete_expense(request, pk):
-    return render(request, 'expense-delete.html')
+    expense = Expense.objects.get(pk=pk)
+
+    context = {
+        'expense': expense
+    }
+
+    if request.method == 'POST':
+        form = DeleteExpenseForm(request.POST, request.FILES, instance=expense)
+
+        if form.is_valid():
+            expense.delete()
+            messages.success(request, 'Your expense was successfully deleted!')
+        else:
+            messages.error(request, 'Error deleting data!')
+        return redirect('home')
+
+    form = DeleteExpenseForm(instance=expense)
+
+    context['form'] = form
+    return render(request, 'expense-delete.html', context)
 
 
 def show_profile(request):
-    return render(request, 'profile.html')
+    profile = get_profile()
+
+    if profile:
+        profile = profile[0]
+
+        budget = profile.budget
+        expenses = Expense.objects.all()
+        items_count = len(expenses)
+        budget_left = budget - sum(e.price for e in expenses)
+
+        context = {
+            'profile': profile,
+            'budget': budget,
+            'expenses': expenses,
+            'budget_left': budget_left,
+            'items_count': items_count,
+        }
+        return render(request, 'profile.html', context)
+    else:
+        return redirect('create profile')
 
 
 def create_profile(request):

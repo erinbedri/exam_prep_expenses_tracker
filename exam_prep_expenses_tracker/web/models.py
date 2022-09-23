@@ -39,12 +39,17 @@ class Profile(models.Model):
     )
 
     image = models.ImageField(
+        upload_to='profile',
         null=True,
         blank=True,
         validators=(
             file_size,
         )
     )
+
+    @property
+    def get_full_name(self):
+        return f'{self.first_name} {self.last_name}'
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}'
@@ -65,6 +70,9 @@ class Expense(models.Model):
         null=True,
         blank=True,
     )
+
+    class Meta:
+        ordering = ('title', 'description')
 
     def __str__(self):
         return f'{self.title} - {self.price}'

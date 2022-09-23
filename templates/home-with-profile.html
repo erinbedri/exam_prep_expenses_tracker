@@ -3,19 +3,20 @@
 {% block content %}
 
     <div>
-        <h1>Summary</h1>
-        <ul class="expenses-list">
+        {% if expenses %}
+            <h1>Summary</h1>
+            <ul class="expenses-list">
 
-            <li class="blue">{{ budget|floatformat:2 }}$</li>
+                <li class="blue">{{ budget|floatformat:2 }}$</li>
 
-            {% for expense in expenses %}
-                <li class="red"> - {{ expense.price|floatformat:2 }}$</li>
-            {% endfor %}
+                {% for expense in expenses %}
+                    <li class="red"> - {{ expense.price|floatformat:2 }}$</li>
+                {% endfor %}
 
-            <li class="green">= {{ budget_left|floatformat:2 }}$ left</li>
-        </ul>
-    </div>
-
+                <li class="green">= {{ budget_left|floatformat:2 }}$ left</li>
+            </ul>
+            </div>
+        {% endif %}
     <h1>My Expenses</h1>
 
     <a class="button add" href="{% url 'create expense' %}">Add Expense</a>
